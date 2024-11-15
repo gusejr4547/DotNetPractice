@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebApplicationPractice.Todo.DTO;
 using WebApplicationPractice.Todo.Entity;
+using WebApplicationPractice.Todo.Service;
 
 namespace WebApplicationPractice.Todo.Controller
 {
@@ -14,22 +17,25 @@ namespace WebApplicationPractice.Todo.Controller
     public class TodoController : ControllerBase
     {
         private readonly TodoContext _context;
+        private readonly TodoService todoService;
 
-        public TodoController(TodoContext context)
+        public TodoController(TodoContext context, TodoService todoService)
         {
             _context = context;
+            this.todoService = todoService;
         }
 
         // POST: api/Todo
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem todoItem)
+        public async Task<ActionResult<TodoItemDTO.Response>> PostTodoItem(TodoItemDTO.Post todoItem)
         {
-            _context.Todos.Add(todoItem);
-            await _context.SaveChangesAsync();
+            //_context.Todos.Add(todoItem);
+            //await _context.SaveChangesAsync();
+            TodoItemDTO.Response todoResponse = await todoService.createTodo(todoItem);
 
             //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            return CreatedAtAction(nameof(GetTodoItem), new { id = todoItem.Id }, todoItem);
+            return CreatedAtAction(nameof(GetTodoItem), new { id = todoResponse.Id }, todoResponse);
         }
 
         // GET: api/Todo

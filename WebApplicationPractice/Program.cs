@@ -1,5 +1,8 @@
+using Microsoft.Build.Experimental;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationPractice.Todo.Entity;
+using WebApplicationPractice.Todo.Repository;
+using WebApplicationPractice.Todo.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<TodoContext>(opt => opt.UseInMemoryDatabase("TodoList"));
+builder.Services.AddScoped<TodoService>();
+builder.Services.AddScoped<TodoRepository>();  
 
 var app = builder.Build();
 
